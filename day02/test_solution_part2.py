@@ -1,6 +1,6 @@
-# Advent of Code 2024 Day 2 - Part 1
+# Advent of Code 2024 Day 2 - Part 2
 # Leon Rees 7 Dec 2024
-# Solution with full puzzle input
+# Solution with limited test data
 def check_adjacent_differences(levels):
     for i in range(len(levels) - 1):
         diff = abs(levels[i] - levels[i + 1])
@@ -14,17 +14,29 @@ def is_monotonic(levels):
     return increasing or decreasing
 
 def is_safe(levels):
-    return check_adjacent_differences(levels) and is_monotonic(levels)
+    # First check if safe without removing any level
+    if check_adjacent_differences(levels) and is_monotonic(levels):
+        return True
+    
+    # Try removing each level one at a time
+    for i in range(len(levels)):
+        test_levels = levels[:i] + levels[i+1:]
+        if check_adjacent_differences(test_levels) and is_monotonic(test_levels):
+            return True
+    
+    return False
 
 def solve(input_text):
     reports = [[int(x) for x in line.split()] for line in input_text.strip().split('\n')]
     return sum(1 for report in reports if is_safe(report))
 
-def read_input_file():
-    with open('input.txt', 'r') as file:
-        return file.read()
+# Test data
+test_input = """7 6 4 2 1
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9"""
 
-if __name__ == '__main__':
-    input_text = read_input_file()
-    result = solve(input_text)
-    print(f"Solution: {result}")
+result = solve(test_input)
+print(f"Test solution: {result}")  # Should print 4

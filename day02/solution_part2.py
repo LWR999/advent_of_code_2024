@@ -1,4 +1,4 @@
-# Advent of Code 2024 Day 2 - Part 1
+# Advent of Code 2024 Day 2 - Part 2
 # Leon Rees 7 Dec 2024
 # Solution with full puzzle input
 def check_adjacent_differences(levels):
@@ -14,7 +14,17 @@ def is_monotonic(levels):
     return increasing or decreasing
 
 def is_safe(levels):
-    return check_adjacent_differences(levels) and is_monotonic(levels)
+    # First check if safe without removing any level
+    if check_adjacent_differences(levels) and is_monotonic(levels):
+        return True
+    
+    # Try removing each level one at a time
+    for i in range(len(levels)):
+        test_levels = levels[:i] + levels[i+1:]
+        if check_adjacent_differences(test_levels) and is_monotonic(test_levels):
+            return True
+    
+    return False
 
 def solve(input_text):
     reports = [[int(x) for x in line.split()] for line in input_text.strip().split('\n')]
